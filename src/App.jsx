@@ -3,46 +3,56 @@ import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import Performance from "./pages/Performance";
 import Students from "./pages/Students";
-import AddStudent from "./pages/AddStudent";
+import AddStudentForm from "./components/AddStudentForm";
 import Attendance from "./pages/Attendance";
 import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import Register from "./pages/Register";
-import PrivateRoute from "./components/PrivateRoute";
+import Login from "./pages/Login";
+import StudentLogin from "./pages/StudentLogin";
+import TeacherLogin from "./pages/TeacherLogin";
+import { SearchProvider } from "./context/SearchContext";
+import Logout from "./pages/Logout";
 
 function App() {
   return (
+    <SearchProvider>
     <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<Login />} />
+      {/* Auth Pages */}
+      <Route path="/" element={<Register />} /> {/* default → Register */}
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/student-login" element={<StudentLogin />} />
+      <Route path="/teacher-login" element={<TeacherLogin />} />
+      <Route path="/logout" element={<Logout />} />
 
-      {/* Protected routes */}
+      {/* Protected Dashboard Layout */}
       <Route
         path="/*"
         element={
-          <PrivateRoute>
-            <div className="min-h-screen flex">
+          <div className="min-h-screen flex flex-col">
+            <Navbar />
+            <div className="flex flex-1">
               <Sidebar />
-              <div className="flex-1">
-                <Navbar />
-                <div className="p-4">
-                  <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/students" element={<Students />} />
-                    <Route path="/add-student" element={<AddStudent />} />
-                    <Route path="/attendance" element={<Attendance />} />
-                    <Route path="/performance" element={<Performance />} />
-                    <Route path="/settings" element={<Settings />} />
-                  </Routes>
-                </div>
-              </div>
+              <main className="flex-1 p-6 bg-gray-50 overflow-auto">
+                <Routes>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="students" element={<Students />} />
+                  <Route path="add-student" element={<AddStudentForm />} />
+                  <Route path="attendance" element={<Attendance />} />
+                  <Route path="performance" element={<Performance />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="profile" element={<Profile />} />
+                  
+                </Routes>
+              </main>
             </div>
-          </PrivateRoute>
+          </div>
         }
       />
     </Routes>
+    </SearchProvider>
   );
 }
 

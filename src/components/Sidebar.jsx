@@ -1,4 +1,4 @@
-import React from "react";
+/*import React from "react";
 import { NavLink } from "react-router-dom";
 
 const base =
@@ -20,12 +20,12 @@ const NavItems = ({ onClick }) => (
 export default function Sidebar({ open, onClose }) {
   return (
     <>
-      {/* desktop */}
+     
       <aside className="w-60 shrink-0 border-r bg-white hidden md:block">
         <NavItems />
       </aside>
 
-      {/* mobile drawer */}
+     
       {open && (
         <div
           className="fixed inset-0 z-50 bg-black/30 md:hidden"
@@ -51,4 +51,24 @@ export default function Sidebar({ open, onClose }) {
       )}
     </>
   );
+}*/
+import { Link } from 'react-router-dom';
+
+export default function Sidebar() {
+  return (
+    <aside className="w-64 bg-white border-r shadow-md sticky top-14 h-[calc(100vh-56px)]">
+      <nav className="flex flex-col p-4 gap-3">
+        <a href="/Dashboard" className="hover:bg-indigo-100 p-2 rounded">🏠 Dashboard</a>
+        
+
+        <a href="/students" className="hover:bg-indigo-100 p-2 rounded">🎓 Students</a>
+        <a href="/add-student" className="hover:bg-indigo-100 p-2 rounded">➕ Add Student</a>
+        <a href="/attendance" className="hover:bg-indigo-100 p-2 rounded">📅 Attendance</a>
+        <a href="/performance" className="hover:bg-indigo-100 p-2 rounded">📈 Performance</a>
+        <a href="/settings" className="hover:bg-indigo-100 p-2 rounded">⚙️ Settings</a>
+        <a href="/Logout" className="hover:bg-indigo-100 p-2 rounded">🚪Logout</a>
+      </nav>
+    </aside>
+  );
 }
+

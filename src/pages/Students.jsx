@@ -1,103 +1,100 @@
-/*import React, { useState } from "react";
-import { students } from "../data";
+import React, { useState, useContext } from "react";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { SearchContext } from "../context/SearchContext";
+
+const initialStudents = [
+  { id: 101, name: "Sneha Patil", grade: "A", address: "Pune", contact: "9876543210" },
+  { id: 102, name: "Rohan Deshmukh", grade: "B", address: "Mumbai", contact: "9123456780" },
+  { id: 103, name: "Meera Kulkarni", grade: "A+", address: "Nashik", contact: "9988776655" },
+  { id: 104, name: "Aditya Joshi", grade: "B+", address: "Nagpur", contact: "9871234560" },
+  { id: 105, name: "Tanvi Shah", grade: "A", address: "Thane", contact: "9765432109" },
+  { id: 106, name: "Karan Mehta", grade: "C", address: "Ahmedabad", contact: "9345678901" },
+  { id: 107, name: "Isha Nair", grade: "A+", address: "Bangalore", contact: "9001234567" },
+  { id: 108, name: "Arjun Verma", grade: "B", address: "Indore", contact: "9321654780" },
+  { id: 109, name: "Neha Rane", grade: "A", address: "Kolhapur", contact: "9876541230" },
+  { id: 110, name: "Siddharth Pawar", grade: "C+", address: "Solapur", contact: "9012345678" },
+];
+
 
 export default function Students() {
-  const [search, setSearch] = useState("");
+  const [students, setStudents] = useState(initialStudents);
+  const [showForm, setShowForm] = useState(false);
+  const { searchTerm } = useContext(SearchContext); // ✅ Global searchTerm from Navbar
 
-  const filtered = students.filter(s =>
-    s.name.toLowerCase().includes(search.toLowerCase())
+  const handleAddStudent = (newStudent) => {
+    const newId = students.length + 1;
+    setStudents([...students, { id: newId, ...newStudent }]);
+    setShowForm(false);
+  };
+
+  const handleDelete = (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this student?");
+    if (confirmDelete) {
+      setStudents(students.filter((student) => student.id !== id));
+    }
+  };
+
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-slate-700">Students</h2>
-
-      
-      <div className="flex items-center gap-2 max-w-sm">
-        <input
-          type="text"
-          placeholder="Search student..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-gray-800">👨‍🎓 Students</h2>
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+        >
+          <span>Add Student</span>
+        </button>
       </div>
 
-      
-      <div className="overflow-x-auto bg-white rounded-xl shadow">
-        <table className="w-full border-collapse">
-          <thead className="bg-slate-100 text-slate-600 text-sm">
+      {/* Add Student Form */}
+      {showForm && (
+        <AddStudentForm onSubmit={handleAddStudent} />
+      )}
+
+      {/* Student Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white rounded-lg shadow-md">
+          <thead className="bg-gray-100 text-gray-700">
             <tr>
-              <th className="text-left p-3">Name</th>
-              <th className="text-left p-3">Attendance (%)</th>
-              <th className="text-left p-3">Average Marks (%)</th>
-              <th className="text-left p-3">Actions</th>
+              <th className="px-4 py-2 text-left">Id</th>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Grade</th>
+              <th className="px-4 py-2 text-left">Address</th>
+              <th className="px-4 py-2 text-left">Contact</th>
+              <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((s, i) => (
-              <tr key={i} className="border-t">
-                <td className="p-3">{s.name}</td>
-                <td className="p-3">{s.attendance}</td>
-                <td className="p-3">{s.average}</td>
-                <td className="p-3 space-x-2">
-                  <button className="text-indigo-600 hover:underline">Edit</button>
-                  <button className="text-red-600 hover:underline">Delete</button>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
+            {filteredStudents.length > 0 ? (
+              filteredStudents.map((student) => (
+                <tr key={student.id} className="border-t">
+                  <td className="px-4 py-2">{student.id}</td>
+                  <td className="px-4 py-2">{student.name}</td>
+                  <td className="px-4 py-2">{student.grade}</td>
+                  <td className="px-4 py-2">{student.address || "—"}</td>
+                  <td className="px-4 py-2">{student.contact || "—"}</td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleDelete(student.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td colSpan="4" className="p-3 text-center text-slate-500">
-                  No students found
+                <td colSpan="6" className="px-4 py-6 text-center text-gray-500">
+                  No students found.
                 </td>
               </tr>
             )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}*/
-
-import React from 'react';
-
-const students = [
-  { id: 1, name: 'John Doe', class: '10A', attendance: '95%', grade: 'A' },
-  { id: 2, name: 'Priya Sharma', class: '9B', attendance: '88%', grade: 'B+' },
-  { id: 3, name: 'Amit Verma', class: '10A', attendance: '92%', grade: 'A-' },
-  { id: 4, name: 'Sara Khan', class: '8C', attendance: '97%', grade: 'A+' },
-];
-
-export default function Students() {
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Students</h1>
-
-      <div className="bg-white shadow rounded-lg overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Class</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Attendance</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Grade</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {students.map((student) => (
-              <tr key={student.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-800">{student.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-600">{student.class}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">{student.attendance}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-blue-600 font-medium">{student.grade}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="text-indigo-600 hover:text-indigo-800 font-medium mr-4">View</button>
-                  <button className="text-red-600 hover:text-red-800 font-medium">Delete</button>
-                </td>
-              </tr>
-            ))}
           </tbody>
         </table>
       </div>
