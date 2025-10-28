@@ -1,81 +1,87 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useState } from "react";
+import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { SearchContext } from "../context/SearchContext";
 
-export default function StudentTable({ rows }) {
-  const [q, setQ] = useState("");
-  const [cls, setCls] = useState("All");
+const students = [
+  { id: 101, name: "Sneha Patil", grade: "A", address: "Pune", contact: "9876543210" },
+  { id: 102, name: "Rohan Deshmukh", grade: "B", address: "Mumbai", contact: "9123456780" },
+  { id: 103, name: "Meera Kulkarni", grade: "A+", address: "Nashik", contact: "9988776655" },
+  { id: 104, name: "Aditya Joshi", grade: "B+", address: "Nagpur", contact: "9871234560" },
+  { id: 105, name: "Tanvi Shah", grade: "A", address: "Thane", contact: "9765432109" },
+  { id: 106, name: "Karan Mehta", grade: "C", address: "Ahmedabad", contact: "9345678901" },
+  { id: 107, name: "Isha Nair", grade: "A+", address: "Bangalore", contact: "9001234567" },
+  { id: 108, name: "Arjun Verma", grade: "B", address: "Indore", contact: "9321654780" },
+  { id: 109, name: "Neha Rane", grade: "A", address: "Kolhapur", contact: "9876541230" },
+  { id: 110, name: "Siddharth Pawar", grade: "C+", address: "Solapur", contact: "9012345678" },
+];
 
-  const classes = useMemo(() => ["All", ...new Set(rows.map(r => r.className))], [rows]);
+export default function StudentTable() {
+  const { searchTerm } = useContext(SearchContext);
+  const [studentList, setStudentList] = useState(students);
 
-  const filtered = useMemo(() => {
-    return rows.filter(r => {
-      const byText =
-        r.name.toLowerCase().includes(q.toLowerCase()) ||
-        String(r.roll).includes(q) ||
-        r.id.toLowerCase().includes(q.toLowerCase());
-      const byClass = cls === "All" ? true : r.className === cls;
-      return byText && byClass;
-    });
-  }, [rows, q, cls]);
+  const filteredStudents = studentList.filter((student) =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleDelete = (id) => {
+    const confirm = window.confirm("Are you sure you want to delete this student?");
+    if (confirm) {
+      setStudentList(studentList.filter((s) => s.id !== id));
+    }
+  };
+
+  const handleEdit = (student) => {
+    alert(`Edit student: ${student.name}`); // You can replace this with a modal or form
+  };
 
   return (
-    <div className="bg-white rounded-xl shadow p-4">
-      {/* controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-        <input
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          placeholder="Search by name / roll / ID…"
-          className="border rounded-lg px-3 py-2 w-full sm:w-72"
-        />
-        <select
-          value={cls}
-          onChange={e => setCls(e.target.value)}
-          className="border rounded-lg px-3 py-2 w-full sm:w-56"
-        >
-          {classes.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
-
-      {/* table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-100 text-slate-700">
+    <div className="bg-white rounded-xl shadow-md overflow-x-auto mt-6">
+      <h2 className="text-xl font-semibold text-gray-800 px-6 py-4">📋 Student List</h2>
+      <table className="min-w-full text-sm text-left">
+        <thead className="bg-indigo-600 text-white">
+          <tr>
+            <th className="px-4 py-3">ID</th>
+            <th className="px-4 py-3">Name</th>
+            <th className="px-4 py-3">Grade</th>
+            <th className="px-4 py-3">Address</th>
+            <th className="px-4 py-3">Contact</th>
+            <th className="px-4 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredStudents.length > 0 ? (
+            filteredStudents.map((student) => (
+              <tr key={student.id} className="border-b hover:bg-indigo-50 transition">
+                <td className="px-4 py-2 font-medium text-gray-700">{student.id}</td>
+                <td className="px-4 py-2">{student.name}</td>
+                <td className="px-4 py-2">{student.grade}</td>
+                <td className="px-4 py-2">{student.address}</td>
+                <td className="px-4 py-2">{student.contact}</td>
+                <td className="px-4 py-2 flex gap-2">
+                  <button
+                    onClick={() => handleEdit(student)}
+                    className="text-indigo-600 hover:text-indigo-800"
+                  >
+                    <PencilSquareIcon className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(student.id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <TrashIcon className="w-5 h-5" />
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <th className="text-left px-3 py-2">ID</th>
-              <th className="text-left px-3 py-2">Roll</th>
-              <th className="text-left px-3 py-2">Name</th>
-              <th className="text-left px-3 py-2">Class</th>
-              <th className="text-left px-3 py-2">Attendance</th>
-              <th className="text-left px-3 py-2">Average</th>
-              <th className="text-left px-3 py-2">Actions</th>
+              <td colSpan="6" className="px-4 py-6 text-center text-gray-500">
+                No matching students found.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filtered.map(r => (
-              <tr key={r.id} className="border-b last:border-0 hover:bg-indigo-50/40">
-                <td className="px-3 py-2 font-mono">{r.id}</td>
-                <td className="px-3 py-2">{r.roll}</td>
-                <td className="px-3 py-2 font-medium">{r.name}</td>
-                <td className="px-3 py-2">{r.className}</td>
-                <td className="px-3 py-2">{r.attendance}%</td>
-                <td className="px-3 py-2">{r.average}%</td>
-                <td className="px-3 py-2">
-                  <button className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs hover:bg-indigo-700">View</button>
-                  <button className="px-3 py-1.5 rounded-lg bg-amber-500 text-white text-xs hover:bg-amber-600 ml-2">Edit</button>
-                  <button className="px-3 py-1.5 rounded-lg bg-rose-500 text-white text-xs hover:bg-rose-600 ml-2">Delete</button>
-                </td>
-              </tr>
-            ))}
-            {filtered.length === 0 && (
-              <tr>
-                <td className="px-3 py-6 text-center text-slate-500" colSpan={7}>
-                  No students found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

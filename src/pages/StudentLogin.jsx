@@ -8,7 +8,7 @@ const StudentLogin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Login successful!");
-    navigate("/dashboard");
+    navigate("/Student-Dashboard");
   };
 
   return (

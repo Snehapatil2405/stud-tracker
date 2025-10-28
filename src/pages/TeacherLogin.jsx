@@ -8,7 +8,7 @@ const TeacherLogin = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Login successful!");
-    navigate("/dashboard");
+    navigate("/settings");
   };
 
   return (
@@ -49,6 +49,27 @@ const TeacherLogin = () => {
                 peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-teal-600"
             >
               Email Address
+            </label>
+          </div>
+
+          {/* Mobile Number */}
+          <div className="relative">
+            <input
+              type="tel"
+              id="mobile"
+              required
+              placeholder=" "
+              pattern="[0-9]{10}"
+              maxLength={10}
+              className="peer w-full border-b-2 border-gray-300 focus:border-teal-600 outline-none py-2 bg-transparent"
+            />
+            <label
+              htmlFor="mobile"
+              className="absolute left-0 -top-3.5 text-sm text-teal-600 transition-all
+      peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
+      peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-teal-600"
+            >
+              Mobile Number
             </label>
           </div>
 
