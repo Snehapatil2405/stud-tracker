@@ -1,22 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { FaUser, FaEnvelope, FaLock, FaImage, FaSchool } from "react-icons/fa";
 
 export default function StudentSettings() {
   const [profile, setProfile] = useState({
-    name: "Sneha Kulkarni",
+    name: "Sneha Patil",
     email: "sneha@example.com",
-    avatar: null, // base64 or file URL
+    avatar: null,
+    password: "",
+    className: localStorage.getItem("studentClass") || "FYBCA",
   });
 
-  const [passwords, setPasswords] = useState({
-    current: "",
-    new: "",
-    confirm: "",
-  });
+  const [passwords, setPasswords] = useState({ current: "", new: "", confirm: "" });
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordSectionRef = useRef(null);
+
+  useEffect(() => {
+    if (showPasswordForm) {
+      passwordSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showPasswordForm]);
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem("studentClass", profile.className);
     console.log("👤 Updated Profile:", profile);
-    alert("Profile updated (console only)");
+    alert("Profile updated & saved!");
   };
 
   const handlePasswordSubmit = (e) => {
@@ -25,8 +34,11 @@ export default function StudentSettings() {
       alert("New passwords do not match");
       return;
     }
+    localStorage.setItem("studentPassword", passwords.new);
     console.log("🔒 Password Change:", passwords);
-    alert("Password change submitted (console only)");
+    alert("Password changed & saved!");
+    setShowPasswordForm(false);
+    setPasswords({ current: "", new: "", confirm: "" });
   };
 
   const handleAvatarChange = (e) => {
@@ -35,7 +47,6 @@ export default function StudentSettings() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile({ ...profile, avatar: reader.result });
-        console.log("🖼️ Avatar Uploaded:", reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -43,146 +54,158 @@ export default function StudentSettings() {
 
   const handleAvatarRemove = () => {
     setProfile({ ...profile, avatar: null });
-    console.log("🗑️ Avatar Removed");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-purple-700">
-          ⚙️ Student Settings
-        </h1>
-        <p className="text-sm text-gray-600">
-          Update your profile and secure your account
-        </p>
+        <h1 className="text-3xl font-bold text-purple-700">⚙ Student Settings</h1>
+        <p className="text-sm text-gray-600">Manage your profile, class & security</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Profile Update Form */}
-        <form
-          onSubmit={handleProfileSubmit}
-          className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-purple-500 space-y-4"
-        >
-          <h2 className="text-xl font-semibold text-gray-800">
-            👤 Update Profile
-          </h2>
+      {/* Profile Update Form */}
+      <form
+        onSubmit={handleProfileSubmit}
+        className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-purple-500 space-y-4 mb-8"
+      >
+        <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+          <FaUser /> Profile Information
+        </h2>
 
-          {/* Avatar Section */}
-          <div className="flex items-center space-x-4">
-            <img
-              src={
-                profile.avatar || "/Avtar.png" // ✅ Your uploaded default avatar
-              }
-              alt="Avatar"
-              className="w-20 h-20 rounded-full object-cover border-0 border-purple-500"
-            />
-            <div className="space-x-2">
-              <label className="bg-purple-600 text-white px-3 py-1 rounded cursor-pointer hover:bg-purple-700">
-                Upload
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-              </label>
-              <button
-                type="button"
-                onClick={handleAvatarRemove}
-                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-
-          {/* Name & Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Name
+        {/* Avatar Section */}
+        <div className="flex items-center space-x-4">
+          <img
+            src={profile.avatar || "/Avtar.png"}
+            alt="Avatar"
+            className="w-20 h-20 rounded-full object-cover shadow"
+          />
+          <div className="space-x-2">
+            <label className="bg-purple-600 text-white px-3 py-1 rounded cursor-pointer hover:bg-purple-700">
+              <FaImage className="inline mr-1" /> Upload
+              <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
             </label>
-            <input
-              type="text"
-              value={profile.name}
-              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-              className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-              required
-            />
+            <button
+              type="button"
+              onClick={handleAvatarRemove}
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+            >
+              Remove
+            </button>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              value={profile.email}
-              onChange={(e) =>
-                setProfile({ ...profile, email: e.target.value })
-              }
-              className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
-              required
-            />
-          </div>
+        {/* Name */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Name</label>
+          <input
+            type="text"
+            value={profile.name}
+            onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+            required
+          />
+        </div>
 
-          <button
-            type="submit"
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+        {/* Email */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            value={profile.email}
+            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+            required
+          />
+        </div>
+
+        {/* Class Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Class</label>
+          <select
+            value={profile.className}
+            onChange={(e) => setProfile({ ...profile, className: e.target.value })}
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
           >
-            Save Profile
-          </button>
-        </form>
+            <option value="FYBCA">FYBCA</option>
+            <option value="SYBCA">SYBCA</option>
+            <option value="TYBCA">TYBCA</option>
+          </select>
+        </div>
 
-        {/* Password Change Form */}
+        {/* Password with Show + Reset */}
+        <div className="relative">
+          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            type={showPassword ? "text" : "password"}
+            value={profile.password}
+            onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+            className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-20 top-8 text-sm text-teal-600 hover:underline"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPasswordForm(true)}
+            className="absolute right-2 top-8 text-sm text-teal-600 hover:underline"
+          >
+            Reset
+          </button>
+        </div>
+
+        <button
+          type="submit"
+          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+        >
+          Save Profile
+        </button>
+      </form>
+
+      {/* Password Change Form (stacked below, not side) */}
+      {showPasswordForm && (
         <form
+          ref={passwordSectionRef}
           onSubmit={handlePasswordSubmit}
           className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-indigo-500 space-y-4"
         >
-          <h2 className="text-xl font-semibold text-gray-800">
-            🔒 Change Password
+          <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+            <FaLock /> Change Password
           </h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Current Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Current Password</label>
             <input
               type="password"
               value={passwords.current}
-              onChange={(e) =>
-                setPasswords({ ...passwords, current: e.target.value })
-              }
+              onChange={(e) => setPasswords({ ...passwords, current: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              New Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">New Password</label>
             <input
               type="password"
               value={passwords.new}
-              onChange={(e) =>
-                setPasswords({ ...passwords, new: e.target.value })
-              }
+              onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Confirm New Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
             <input
               type="password"
               value={passwords.confirm}
-              onChange={(e) =>
-                setPasswords({ ...passwords, confirm: e.target.value })
-              }
+              onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
               className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
@@ -190,12 +213,12 @@ export default function StudentSettings() {
 
           <button
             type="submit"
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+            className="bg-gradient-to-r from-teal-600 to-blue-600 text-white px-6 py-2 rounded-lg hover:scale-105 transition duration-300"
           >
-            Change Password
+            Save New Password
           </button>
         </form>
-      </div>
+      )}
     </div>
   );
 }

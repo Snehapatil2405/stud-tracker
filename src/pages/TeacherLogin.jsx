@@ -1,14 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const TeacherLogin = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const passwordSectionRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    mobile: "",
+    password: "",
+  });
+
+  const [passwords, setPasswords] = useState({
+    current: "",
+    new: "",
+    confirm: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     alert("Login successful!");
     navigate("/settings");
+  };
+
+  const handleResetClick = () => {
+    setShowPasswordForm(true);
+    setTimeout(() => {
+      passwordSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (passwords.new !== passwords.confirm) {
+      alert("New passwords do not match");
+      return;
+    }
+    alert("Password changed!");
+    setShowPasswordForm(false);
+    setPasswords({ current: "", new: "", confirm: "" });
   };
 
   return (
@@ -24,7 +56,7 @@ const TeacherLogin = () => {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center justify-center bg-gray-100 p-6">
+      <div className="flex flex-col items-center justify-center bg-gray-100 p-6 overflow-y-auto">
         <form
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-6"
@@ -34,69 +66,65 @@ const TeacherLogin = () => {
           </h2>
 
           {/* Email */}
-          <div className="relative">
+          <div className="mb-4">
+            
             <input
               type="email"
               id="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
               required
-              placeholder=" "
-              className="peer w-full border-b-2 border-gray-300 focus:border-teal-600 outline-none py-2 bg-transparent"
             />
-            <label
-              htmlFor="email"
-              className="absolute left-0 -top-3.5 text-sm text-teal-600 transition-all
-                peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
-                peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-teal-600"
-            >
-              Email Address
-            </label>
           </div>
 
           {/* Mobile Number */}
-          <div className="relative">
+          <div className="mb-4">
+            
             <input
               type="tel"
               id="mobile"
-              required
-              placeholder=" "
-              pattern="[0-9]{10}"
+              placeholder="Mobile Number"
+              value={formData.mobile}
+              onChange={(e) =>
+                setFormData({ ...formData, mobile: e.target.value })
+              }
               maxLength={10}
-              className="peer w-full border-b-2 border-gray-300 focus:border-teal-600 outline-none py-2 bg-transparent"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              required
             />
-            <label
-              htmlFor="mobile"
-              className="absolute left-0 -top-3.5 text-sm text-teal-600 transition-all
-      peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
-      peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-teal-600"
-            >
-              Mobile Number
-            </label>
           </div>
 
-          {/* Password */}
-          <div className="relative">
+          {/* Password + Show/Hide + Reset */}
+          <div className="mb-4 relative">
+            
             <input
               type={showPassword ? "text" : "password"}
               id="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
               required
-              placeholder=" "
-              className="peer w-full border-b-2 border-gray-300 focus:border-teal-600 outline-none py-2 bg-transparent"
             />
-            <label
-              htmlFor="password"
-              className="absolute left-0 -top-3.5 text-sm text-teal-600 transition-all
-                peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2
-                peer-focus:-top-3.5 peer-focus:text-sm peer-focus:text-teal-600"
-            >
-              Password
-            </label>
-
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-0 top-2 text-sm text-teal-600 hover:underline"
+              className="absolute right-20 top-8 text-sm text-teal-600 hover:underline"
             >
               {showPassword ? "Hide" : "Show"}
+            </button>
+            <button
+              type="button"
+              onClick={handleResetClick}
+              className="absolute right-2 top-8 text-sm text-teal-600 hover:underline"
+            >
+              Reset
             </button>
           </div>
 
@@ -119,6 +147,54 @@ const TeacherLogin = () => {
             </a>
           </p>
         </form>
+
+        {/* Change Password Section */}
+        {showPasswordForm && (
+          <div
+            ref={passwordSectionRef}
+            className="bg-gradient-to-br from-indigo-100 to-purple-200 p-6 mt-6 rounded-xl shadow-md w-full max-w-md space-y-4"
+          >
+            <h3 className="text-lg font-semibold text-gray-800">
+              🔐 Change Password
+            </h3>
+            <input
+              type="password"
+              value={passwords.current}
+              onChange={(e) =>
+                setPasswords({ ...passwords, current: e.target.value })
+              }
+              placeholder="Current Password"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              required
+            />
+            <input
+              type="password"
+              value={passwords.new}
+              onChange={(e) =>
+                setPasswords({ ...passwords, new: e.target.value })
+              }
+              placeholder="New Password"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              required
+            />
+            <input
+              type="password"
+              value={passwords.confirm}
+              onChange={(e) =>
+                setPasswords({ ...passwords, confirm: e.target.value })
+              }
+              placeholder="Confirm New Password"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+            />
+            <button
+              type="button"
+              onClick={handlePasswordSubmit}
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:scale-105 transition duration-300"
+            >
+              Save New Password
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

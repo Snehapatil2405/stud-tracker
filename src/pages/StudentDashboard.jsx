@@ -18,7 +18,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     const studentData = {
-      name: "Sneha Kulkarni",
+      name: "Sneha Patil",
       rollNo: "IC413",
       avgMarks: 80,
       attendance: 85,
@@ -63,11 +63,6 @@ export default function StudentDashboard() {
     ],
   };
 
-  const events = [
-    { title: "Midterm Exam", date: "2025-09-20", type: "Exam" },
-    { title: "Parent Meeting", date: "2025-09-25", type: "Meeting" },
-    { title: "Final Exam", date: "2025-10-01", type: "Exam" },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-6">
@@ -143,28 +138,7 @@ export default function StudentDashboard() {
 </div>
 
 
-      {/* Upcoming Events */}
-      <div className="bg-white p-6 rounded-2xl shadow-md border space-y-6 mt-8">
-        <div className="flex items-center gap-3">
-          <FaCalendarAlt className="text-indigo-600 w-6 h-6" />
-          <h3 className="text-2xl font-semibold text-gray-800 tracking-wide">Upcoming Events</h3>
-        </div>
-
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {events.map((event, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center bg-indigo-50 px-4 py-3 rounded-lg hover:bg-indigo-100 transition"
-            >
-              <div>
-                <p className="text-gray-800 font-medium text-[16px]">{event.title}</p>
-                <p className="text-xs text-gray-500">{event.type}</p>
-              </div>
-              <span className="text-sm text-gray-600">{event.date}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      
     </div>
   );
 }

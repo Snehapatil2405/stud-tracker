@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export default function TeacherSettings() {
+export default function TeacherSettings({ onSave }) {
   const [profile, setProfile] = useState({
     name: "",
     subject: "",
@@ -23,17 +23,24 @@ export default function TeacherSettings() {
   const passwordSectionRef = useRef(null);
 
   useEffect(() => {
-    const loggedInTeacher = {
-      email: "sneha@example.com",
-      mobile: "9876543210",
-      password: "********",
-    };
-    setProfile((prev) => ({
-      ...prev,
-      email: loggedInTeacher.email,
-      mobile: loggedInTeacher.mobile,
-      password: loggedInTeacher.password,
-    }));
+    // जर आधी localStorage मध्ये profile save असेल तर ते load करा
+    const savedProfile = localStorage.getItem("teacherProfile");
+    if (savedProfile) {
+      setProfile(JSON.parse(savedProfile));
+    } else {
+      // dummy logged-in teacher info
+      const loggedInTeacher = {
+        email: "devika@example.com",
+        mobile: "9876543210",
+        password: "",
+      };
+      setProfile((prev) => ({
+        ...prev,
+        email: loggedInTeacher.email,
+        mobile: loggedInTeacher.mobile,
+        password: loggedInTeacher.password,
+      }));
+    }
   }, []);
 
   const handleAvatarChange = (e) => {
@@ -65,8 +72,11 @@ export default function TeacherSettings() {
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
+    // localStorage मध्ये save करा
+    localStorage.setItem("teacherProfile", JSON.stringify(profile));
     console.log("👩‍🏫 Teacher Profile Submitted:", profile);
     alert("Profile submitted successfully!");
+    if (onSave) onSave(); // Dashboard refresh trigger
   };
 
   const handleResetClick = () => {
@@ -90,8 +100,6 @@ export default function TeacherSettings() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 p-6 text-[17px]">
-      
-
       <form
         onSubmit={handleProfileSubmit}
         className="bg-white p-6 rounded-2xl shadow-xl border-l-4 border-indigo-500 space-y-6 max-w-3xl mx-auto"
@@ -107,7 +115,12 @@ export default function TeacherSettings() {
           <div className="space-x-2">
             <label className="bg-indigo-600 text-white px-3 py-1 rounded cursor-pointer hover:bg-indigo-700">
               Upload
-              <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarChange}
+                className="hidden"
+              />
             </label>
             <button
               type="button"
