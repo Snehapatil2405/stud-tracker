@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
-import { UserContext } from "../../Context/UserContext"; // ✅ Correct import
+import { useState } from "react";
 
 export default function AdminEditProfile() {
-  const { user, setUser } = useContext(UserContext);
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [profilePic, setProfilePic] = useState(user.profilePic);
+  const DEFAULT_AVATAR = "/images/default-avatar.png"; // तुमचा default avatar path
+
+  const [name, setName] = useState("Admin");
+  const [email, setEmail] = useState("admin@example.com");
+  const [profilePic, setProfilePic] = useState("");
 
   const handlePicChange = (e) => {
     const file = e.target.files[0];
@@ -17,7 +17,6 @@ export default function AdminEditProfile() {
 
   const handleSave = (e) => {
     e.preventDefault();
-    setUser({ name, email, profilePic }); // ✅ update global state
     alert("Profile updated successfully!");
   };
 
@@ -28,7 +27,7 @@ export default function AdminEditProfile() {
       {/* Profile Picture */}
       <div className="flex items-center mb-6 space-x-4">
         <img
-          src={profilePic}
+          src={profilePic || "/Avtar.png"}
           alt="Profile"
           className="w-20 h-20 rounded-full border-2 border-indigo-600 object-cover"
         />

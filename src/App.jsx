@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 
-// ✅ Existing Components
+// Components
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import StudentSidebar from "./components/StudentSidebar";
 
-// ✅ Existing Pages
+// Pages
 import Performance from "./pages/Performance";
 import Attendance from "./pages/Attendance";
 import Settings from "./pages/Settings";
@@ -15,8 +16,6 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import StudentLogin from "./pages/StudentLogin";
-import TeacherLogin from "./pages/TeacherLogin";
 import Logout from "./pages/Logout";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -24,7 +23,7 @@ import TestNoticeBoard from "./pages/TestNoticeBoard";
 import ContactTeacher from "./pages/ContactTeacher";
 import StudentNoticeBoard from "./pages/StudentNoticeBoard";
 
-// ✅ Admin imports
+// Admin
 import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import AdminStudents from "./pages/Admin/AdminStudents";
@@ -36,21 +35,7 @@ import AdminSubjects from "./pages/Admin/AdminSubjects";
 import AdminAnalytics from "./pages/Admin/AdminAnalytics";
 import AdminSettings from "./pages/Admin/AdminSettings";
 import AdminEditProfile from "./pages/Admin/AdminEditProfile";
-
-// ✅ Context import
-import UserProvider from "./Context/UserProvider";   // default export
-import { UserContext } from "./Context/UserContext"; // named export
-
-// ✅ College Components
-import CollegeNavbar from "./components/college/Navbar";
-import CollegeFooter from "./components/college/Footer";
-
-// ✅ College Pages
-import Home from "./pages/College/Home";
-import About from "./pages/College/About";
-import Courses from "./pages/College/Courses";
-import Admissions from "./pages/College/Admissions";
-import Contact from "./pages/College/Contact";
+import AdminLogin from "./pages/Admin/AdminLogin";
 
 function App() {
   const [refresh, setRefresh] = useState(false);
@@ -59,99 +44,74 @@ function App() {
     setRefresh(!refresh);
   };
 
+  // ✅ Teacher Layout Wrapper
+  const TeacherLayout = () => (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 p-6 bg-gray-50 overflow-auto md:ml-64 pt-14">
+          <Outlet /> {/* ✅ Nested routes render इथे होतील */}
+        </main>
+      </div>
+    </div>
+  );
+
+  // ✅ Student Layout Wrapper
+  const StudentLayout = () => (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex flex-1">
+        <StudentSidebar />
+        <main className="flex-1 p-6 bg-gray-50 overflow-auto md:ml-64 pt-14">
+          <Outlet /> {/* ✅ Nested routes render इथे होतील */}
+        </main>
+      </div>
+    </div>
+  );
+
   return (
-    <UserProvider>
-      <Router>
-        <Routes>
-          {/* Auth Pages */}
-          <Route path="/" element={<Register />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/student-login" element={<StudentLogin />} />
-          <Route path="/teacher-login" element={<TeacherLogin />} />
-          <Route path="/logout" element={<Logout />} />
+    <Routes>
+      {/* Auth */}
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/logout" element={<Logout />} />
 
-          {/* Teacher Layout */}
-          <Route
-            path="/teacher/*"
-            element={
-              <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <div className="flex flex-1">
-                  <Sidebar />
-                  <main className="flex-1 p-6 bg-gray-50 overflow-auto md:ml-64 pt-14">
-                    <Routes>
-                      <Route path="dashboard" element={<Dashboard key={refresh} />} />
-                      <Route path="attendance" element={<Attendance />} />
-                      <Route path="performance" element={<Performance />} />
-                      <Route path="settings" element={<Settings onSave={handleProfileSave} />} />
-                      <Route path="profile" element={<Profile />} />
-                      <Route path="teacher-dashboard" element={<TeacherDashboard />} />
-                      <Route path="test-notice-board" element={<TestNoticeBoard />} />
-                    </Routes>
-                  </main>
-                </div>
-              </div>
-            }
-          />
+      {/* Teacher Dashboard */}
+      <Route path="/teacher-dashboard/*" element={<TeacherLayout />}>
+        <Route path="dashboard" element={<Dashboard key={refresh} />} />
+        <Route path="attendance" element={<Attendance />} />
+        <Route path="performance" element={<Performance />} />
+        <Route path="settings" element={<Settings onSave={handleProfileSave} />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path="" element={<TeacherDashboard />} /> {/* default */}
+        <Route path="test-notice-board" element={<TestNoticeBoard />} />
+      </Route>
 
-          {/* Student Layout */}
-          <Route
-            path="/student-dashboard/*"
-            element={
-              <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <div className="flex flex-1">
-                  <StudentSidebar />
-                  <main className="flex-1 p-6 bg-gray-50 overflow-auto md:ml-64 pt-14">
-                    <Routes>
-                      <Route path="/" element={<StudentDashboard />} />
-                      <Route path="student-settings" element={<StudentSettings />} />
-                      <Route path="contact-teacher" element={<ContactTeacher />} />
-                      <Route path="student-notice-board" element={<StudentNoticeBoard />} />
-                    </Routes>
-                  </main>
-                </div>
-              </div>
-            }
-          />
+      {/* Student Dashboard */}
+      <Route path="/student-dashboard/*" element={<StudentLayout />}>
+        <Route path="" element={<StudentDashboard />} /> {/* default */}
+        <Route path="student-settings" element={<StudentSettings />} />
+        <Route path="contact-teacher" element={<ContactTeacher />} />
+        <Route path="student-notice-board" element={<StudentNoticeBoard />} />
+      </Route>
 
-          {/* Admin Layout */}
-          <Route path="/admin/*" element={<AdminLayout />}>
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="students" element={<AdminStudents />} />
-            <Route path="teachers" element={<AdminTeachers />} />
-            <Route path="notices" element={<AdminNotices />} />
-            <Route path="messages" element={<AdminMessages />} />
-            <Route path="classes" element={<AdminClasses />} />
-            <Route path="subjects" element={<AdminSubjects />} />
-            <Route path="analytics" element={<AdminAnalytics />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="edit-profile" element={<AdminEditProfile />} />
-          </Route>
-
-          {/* ✅ College Website Routes */}
-          <Route
-            path="/college/*"
-            element={
-              <div className="min-h-screen flex flex-col">
-                <CollegeNavbar />
-                <main className="flex-1 p-6 bg-gray-50 overflow-auto pt-14">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="about" element={<About />} />
-                    <Route path="courses" element={<Courses />} />
-                    <Route path="admissions" element={<Admissions />} />
-                    <Route path="contact" element={<Contact />} />
-                  </Routes>
-                </main>
-                <CollegeFooter />
-              </div>
-            }
-          />
-        </Routes>
-      </Router>
-    </UserProvider>
+      {/* Admin */}
+      <Route path="/admin/*" element={<AdminLayout />}>
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="students" element={<AdminStudents />} />
+        <Route path="teachers" element={<AdminTeachers />} />
+        <Route path="notices" element={<AdminNotices />} />
+        <Route path="messages" element={<AdminMessages />} />
+        <Route path="classes" element={<AdminClasses />} />
+        <Route path="subjects" element={<AdminSubjects />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="settings" element={<AdminSettings />} />
+        <Route path="edit-profile" element={<AdminEditProfile />} />
+      </Route>
+    </Routes>
   );
 }
 

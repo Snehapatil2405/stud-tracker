@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaUser, FaEnvelope, FaLock, FaImage, FaSchool } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaImage } from "react-icons/fa";
 
 export default function StudentSettings() {
   const [profile, setProfile] = useState({
@@ -57,17 +57,14 @@ export default function StudentSettings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-purple-700">⚙ Student Settings</h1>
-        <p className="text-sm text-gray-600">Manage your profile, class & security</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 p-6 flex flex-col items-center"><br></br>
+    <br></br>
+      
 
       {/* Profile Update Form */}
       <form
         onSubmit={handleProfileSubmit}
-        className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-purple-500 space-y-4 mb-8"
+        className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-purple-500 space-y-4 mb-8 max-w-lg w-full"
       >
         <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
           <FaUser /> Profile Information
@@ -167,12 +164,12 @@ export default function StudentSettings() {
         </button>
       </form>
 
-      {/* Password Change Form (stacked below, not side) */}
+      {/* Password Change Form */}
       {showPasswordForm && (
         <form
           ref={passwordSectionRef}
           onSubmit={handlePasswordSubmit}
-          className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-indigo-500 space-y-4"
+          className="bg-white shadow-lg rounded-xl p-6 border-l-4 border-indigo-500 space-y-4 max-w-lg w-full"
         >
           <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
             <FaLock /> Change Password

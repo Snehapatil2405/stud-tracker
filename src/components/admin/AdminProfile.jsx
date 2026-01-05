@@ -1,11 +1,17 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../Context/UserContext"; // ✅ named import
 
 export default function AdminProfile() {
-  const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  const DEFAULT_AVATAR = "/images/default-avatar.png"; // तुमचा default avatar path
+
+  const user = {
+    name: "Admin",
+    email: "admin@example.com",
+    profilePic: "", // जर रिकामं असेल तर default वापरलं जाईल
+  };
 
   return (
     <div className="relative">
@@ -15,7 +21,7 @@ export default function AdminProfile() {
         onClick={() => setOpen(!open)}
       >
         <img
-          src={user.profilePic}
+          src={user.profilePic ||"/Avtar.png"}
           alt="Admin Avatar"
           className="w-10 h-10 rounded-full border-2 border-indigo-600 object-cover"
         />

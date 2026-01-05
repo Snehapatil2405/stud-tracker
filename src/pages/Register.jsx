@@ -1,19 +1,36 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [role, setRole] = useState("");
+
+  // ✅ State for form fields
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!role) {
-      alert("Please select a role!");
+
+    // ✅ Validation
+    if (!fullName || !email || !password) {
+      setError("All fields are required!");
       return;
     }
-    alert("Registered successfully!");
-    navigate(role === "student" ? "/student-login" : "/teacher-login");
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long!");
+      return;
+    }
+
+    // ✅ Save user temporarily (localStorage for demo)
+    const userData = { fullName, email, role: "student" }; // role fixed
+    localStorage.setItem("user", JSON.stringify(userData));
+
+    // ✅ Redirect → Student Settings
+    navigate("/student-dashboard/student-settings");
   };
 
   return (
@@ -22,71 +39,70 @@ const Register = () => {
       <div className="bg-gradient-to-br from-purple-700 to-indigo-800 text-white flex items-center justify-center p-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Join Student Tracker</h1>
-          <p className="text-lg">Create your account and start managing students efficiently</p>
+          <p className="text-lg">
+            Register now to connect, learn, and manage seamlessly
+          </p>
         </div>
       </div>
 
       {/* Right Section – Form */}
-      <div className="flex items-center justify-center bg-gray-100 p-6">
+      <div className="flex flex-col items-center justify-center bg-gray-100 p-6 overflow-y-auto">
         <form
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-6"
         >
-          <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800">
+            Student Register
+          </h2>
+
+          {/* Error Message */}
+          {error && (
+            <p className="text-red-600 text-sm text-center font-medium">
+              {error}
+            </p>
+          )}
 
           {/* Full Name */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Enter Full Name "
-              required
-              className="peer w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2"
-            />
-            
-          </div>
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder="Enter Full Name"
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          />
 
           {/* Email */}
-          <div className="relative">
-            <input
-              type="email"
-              placeholder="Enter Email Address "
-              required
-              className="peer w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2"
-            />
-            
-          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter Email Address"
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          />
 
-          {/* Password */}
-          <div className="relative">
+          {/* Password + Eye/EyeSlash */}
+          <div className="relative flex items-center">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter Password "
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter Password"
               required
-              className="peer w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2"
+              className="w-full pr-10 border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+              style={{
+                WebkitTextSecurity: showPassword ? "none" : "disc",
+              }}
             />
-            
+            {/* Eye/EyeSlash Icon */}
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-0 top-2 text-sm text-purple-600 hover:underline"
+              className="absolute right-2 top-2 text-gray-500 hover:text-purple-600"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
-          </div>
-
-          {/* Role */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-              className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-purple-500"
-            >
-              <option value="">Select role</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-            </select>
           </div>
 
           {/* Submit */}
@@ -100,7 +116,10 @@ const Register = () => {
           {/* Login Link */}
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="text-purple-600 font-medium hover:underline">
+            <a
+              href="/login"
+              className="text-purple-600 font-medium hover:underline"
+            >
               Login
             </a>
           </p>

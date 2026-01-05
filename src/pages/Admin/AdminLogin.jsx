@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaRedo } from "react-icons/fa";
 
-const TeacherLogin = () => {
+const AdminLogin = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -9,7 +10,6 @@ const TeacherLogin = () => {
 
   const [formData, setFormData] = useState({
     email: "",
-    mobile: "",
     password: "",
   });
 
@@ -21,8 +21,12 @@ const TeacherLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Login successful!");
-    navigate("/settings");
+    if (formData.email === "admin@example.com" && formData.password === "admin123") {
+      alert("Admin login successful!");
+      navigate("/admin/dashboard");
+    } else {
+      alert("Invalid credentials!");
+    }
   };
 
   const handleResetClick = () => {
@@ -46,11 +50,11 @@ const TeacherLogin = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 h-screen">
       {/* Left Section */}
-      <div className="bg-gradient-to-br from-teal-700 to-blue-800 text-white flex items-center justify-center p-8">
+      <div className="bg-gradient-to-br from-purple-700 to-indigo-800 text-white flex items-center justify-center p-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold">Welcome Teacher 👩‍🏫</h1>
+          <h1 className="text-4xl font-bold">Welcome Admin 🛡</h1>
           <p className="text-lg">
-            Log in to manage students, track performance, and take attendance
+            Log in to manage teachers, students, notices & analytics
           </p>
         </div>
       </div>
@@ -62,76 +66,61 @@ const TeacherLogin = () => {
           className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-6"
         >
           <h2 className="text-2xl font-bold text-center text-gray-800">
-            Teacher Login
+            Admin Login
           </h2>
 
           {/* Email */}
           <div className="mb-4">
-            
             <input
               type="email"
-              id="email"
-              placeholder="Email Address"
+              placeholder="Admin Email Address"
               value={formData.email}
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-purple-600 outline-none py-2 transition"
               required
             />
           </div>
 
-          {/* Mobile Number */}
-          <div className="mb-4">
-            
-            <input
-              type="tel"
-              id="mobile"
-              placeholder="Mobile Number"
-              value={formData.mobile}
-              onChange={(e) =>
-                setFormData({ ...formData, mobile: e.target.value })
-              }
-              maxLength={10}
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
-              required
-            />
-          </div>
-
-          {/* Password + Show/Hide + Reset */}
-          <div className="mb-4 relative">
-            
+          {/* Password + Icon Buttons */}
+          <div className="mb-4 relative flex items-center">
             <input
               type={showPassword ? "text" : "password"}
-              id="password"
               placeholder="Password"
               value={formData.password}
               onChange={(e) =>
                 setFormData({ ...formData, password: e.target.value })
               }
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-purple-600 outline-none py-2 pr-16"
               required
+              style={{
+                // ✅ Hide unwanted browser default icons
+                WebkitTextSecurity: showPassword ? "none" : "disc",
+              }}
             />
+            {/* Show/Hide Icon */}
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-20 top-8 text-sm text-teal-600 hover:underline"
+              className="absolute right-10 top-2 text-gray-500 hover:text-purple-600"
             >
-              {showPassword ? "Hide" : "Show"}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
+            {/* Reset Icon */}
             <button
               type="button"
               onClick={handleResetClick}
-              className="absolute right-2 top-8 text-sm text-teal-600 hover:underline"
+              className="absolute right-2 top-2 text-gray-500 hover:text-purple-600"
             >
-              Reset
+              <FaRedo />
             </button>
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-teal-600 to-blue-600 text-white py-2 rounded-lg hover:scale-105 transition"
+            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 rounded-lg hover:scale-105 transition"
           >
             Log In
           </button>
@@ -141,7 +130,7 @@ const TeacherLogin = () => {
             Don’t have an account?{" "}
             <a
               href="/register"
-              className="text-teal-600 font-medium hover:underline"
+              className="text-purple-600 font-medium hover:underline"
             >
               Register
             </a>
@@ -164,7 +153,7 @@ const TeacherLogin = () => {
                 setPasswords({ ...passwords, current: e.target.value })
               }
               placeholder="Current Password"
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-purple-600 outline-none py-2 transition"
               required
             />
             <input
@@ -174,7 +163,7 @@ const TeacherLogin = () => {
                 setPasswords({ ...passwords, new: e.target.value })
               }
               placeholder="New Password"
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-purple-600 outline-none py-2 transition"
               required
             />
             <input
@@ -184,7 +173,7 @@ const TeacherLogin = () => {
                 setPasswords({ ...passwords, confirm: e.target.value })
               }
               placeholder="Confirm New Password"
-              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-blue-600 outline-none py-2 transition"
+              className="w-full border-b-2 border-gray-300 bg-transparent focus:border-purple-600 outline-none py-2 transition"
             />
             <button
               type="button"
@@ -200,4 +189,4 @@ const TeacherLogin = () => {
   );
 };
 
-export default TeacherLogin;
+export default AdminLogin;

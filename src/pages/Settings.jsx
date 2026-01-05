@@ -30,7 +30,7 @@ export default function TeacherSettings({ onSave }) {
     } else {
       // dummy logged-in teacher info
       const loggedInTeacher = {
-        email: "devika@example.com",
+        email: "Sneha@example.com",
         mobile: "9876543210",
         password: "",
       };

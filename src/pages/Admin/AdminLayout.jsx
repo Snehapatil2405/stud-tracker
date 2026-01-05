@@ -1,6 +1,6 @@
 import Sidebar from "../../components/admin/Sidebar";
 import Header from "../../components/admin/Header";
-import AdminProfile from "../../components/admin/AdminProfile"; // ✅ Import
+import AdminProfile from "../../components/admin/AdminProfile";
 import { Outlet } from "react-router-dom";
 
 export default function AdminLayout() {
@@ -12,9 +12,14 @@ export default function AdminLayout() {
       {/* Main Content */}
       <div className="flex-1 bg-gray-50">
         {/* Top Bar */}
-        <div className="flex justify-between items-center p-4 shadow bg-white">
+        <div className="flex justify-between items-center p-4 
+                        bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 
+                        shadow-lg rounded-b-lg">
+          {/* ✅ Left side: Attractive Header */}
           <Header />
-          <AdminProfile />   {/* ✅ Profile with dropdown */}
+
+          {/* ✅ Right side: Profile dropdown */}
+          <AdminProfile />
         </div>
 
         {/* Page Content */}

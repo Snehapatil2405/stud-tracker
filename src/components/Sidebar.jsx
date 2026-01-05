@@ -15,7 +15,7 @@ export default function Sidebar({ closeSidebar }) {
         </button>
       </div>
 
-      {/* Header for md+ (hidden on mobile because above small header exists) */}
+      {/* Header */}
       <h2 className="text-xl font-bold text-indigo-700 mb-8 hidden md:block">👩‍🏫 Teacher Panel</h2>
 
       {/* Navigation */}
@@ -30,19 +30,20 @@ export default function Sidebar({ closeSidebar }) {
         >
           📊 Teacher Dashboard
         </NavLink>
+
         <NavLink
-          to="/attendance"
+          to="/teacher-dashboard/attendance"
           className={({ isActive }) =>
             isActive
               ? "block text-indigo-600 font-semibold"
               : "block hover:text-indigo-500 transition"
           }
         >
-          🗓️ Attendance
+          🗓 Attendance
         </NavLink>
 
         <NavLink
-          to="/performance"
+          to="/teacher-dashboard/performance"
           className={({ isActive }) =>
             isActive
               ? "block text-indigo-600 font-semibold"
@@ -53,7 +54,7 @@ export default function Sidebar({ closeSidebar }) {
         </NavLink>
 
         <NavLink
-          to="/test-notice-board"
+          to="/teacher-dashboard/test-notice-board"
           className={({ isActive }) =>
             isActive
               ? "block text-indigo-600 font-semibold"
@@ -64,14 +65,14 @@ export default function Sidebar({ closeSidebar }) {
         </NavLink>
 
         <NavLink
-          to="/settings"
+          to="/teacher-dashboard/settings"
           className={({ isActive }) =>
             isActive
               ? "block text-indigo-600 font-semibold"
               : "block hover:text-indigo-500 transition"
           }
         >
-          ⚙️ Settings
+          ⚙ Settings
         </NavLink>
 
         <NavLink
