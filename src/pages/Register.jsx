@@ -1,32 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const navigate = useNavigate();
 
   // ✅ State for form fields
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [gender, setGender] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [department, setDepartment] = useState("Department");
+  const [courseYear, setCourseYear] = useState("");
+  const [termsAgreed, setTermsAgreed] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // ✅ Validation
-    if (!fullName || !email || !password) {
+    if (!fullName || !gender || !mobile || !rollNumber || !department || !courseYear) {
       setError("All fields are required!");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long!");
+    if (!termsAgreed) {
+      setError("You must agree to the Terms & Conditions!");
       return;
     }
 
     // ✅ Save user temporarily (localStorage for demo)
-    const userData = { fullName, email, role: "student" }; // role fixed
+    const userData = { fullName, gender, mobile, rollNumber, department, courseYear, role: "student" };
     localStorage.setItem("user", JSON.stringify(userData));
 
     // ✅ Redirect → Student Settings
@@ -72,37 +74,75 @@ const Register = () => {
             className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
           />
 
-          {/* Email */}
+          {/* Gender */}
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            
+          </select>
+
+          {/* Mobile Number */}
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter Email Address"
+            type="tel"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            placeholder="Enter Mobile Number"
             required
             className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
           />
 
-          {/* Password + Eye/EyeSlash */}
-          <div className="relative flex items-center">
+          {/* Roll Number */}
+          <input
+            type="text"
+            value={rollNumber}
+            onChange={(e) => setRollNumber(e.target.value)}
+            placeholder="Enter Roll Number"
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          />
+
+          {/* Department Dropdown (Only BCA) */}
+          <select
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          >
+            <option value=""> Select Department</option>
+            <option value="BCA">BCA</option>
+            
+          </select>
+
+          {/* Course Year Dropdown */}
+          <select
+            value={courseYear}
+            onChange={(e) => setCourseYear(e.target.value)}
+            required
+            className="w-full border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
+          >
+            <option value="">Select Course Year</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+          </select>
+
+          {/* Terms & Conditions */}
+          <div className="flex items-center space-x-2">
             <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter Password"
-              required
-              className="w-full pr-10 border-b-2 border-gray-300 focus:border-purple-600 outline-none py-2 transition"
-              style={{
-                WebkitTextSecurity: showPassword ? "none" : "disc",
-              }}
+              type="checkbox"
+              checked={termsAgreed}
+              onChange={(e) => setTermsAgreed(e.target.checked)}
+              className="h-4 w-4 text-purple-600"
             />
-            {/* Eye/EyeSlash Icon */}
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2 top-2 text-gray-500 hover:text-purple-600"
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+            <label className="text-gray-700 text-sm">
+              I agree to the Terms & Conditions
+            </label>
           </div>
 
           {/* Submit */}

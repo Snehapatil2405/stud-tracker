@@ -1,46 +1,46 @@
 import React from "react";
-import { FaBell } from "react-icons/fa";
+import { FiSearch, FiBell, FiUser } from "react-icons/fi";
 
-export default function Navbar({ unreadCount = 0, onOpenSidebar }) {
+const Header = () => {
   return (
-    <nav
-      role="navigation"
-      className="fixed top-0 left-0 right-0 h-14 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 md:px-6 flex items-center justify-between shadow-md z-50"
+    <header
+      className="sticky top-0 z-30 flex items-center justify-between px-6 py-4
+      bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200
+      backdrop-blur-md shadow-lg border-b border-white/40"
     >
-      {/* Mobile hamburger (visible md:hidden) */}
-      <button
-        onClick={onOpenSidebar}
-        className="md:hidden p-2 rounded hover:bg-white/10 mr-2"
-        aria-label="Open menu"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
-
-      {/* Left: Logo or Title */}
+      {/* Brand */}
       <div className="flex items-center gap-3">
-        <div className="text-lg md:text-xl font-bold tracking-wide select-none">
-          🎓 Student Performance Tracker
-        </div>
+        <div className="w-9 h-9 rounded-lg bg-white/40 backdrop-blur-sm shadow-md" />
+        <h1 className="font-bold text-gray-800 tracking-wide">
+          Student Performance Tracker
+        </h1>
       </div>
 
-      {/* Right: Notification Bell */}
-      <div className="relative flex items-center gap-2">
-        <button
-          aria-label="Notifications"
-          className="p-1 rounded hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
-        >
-          <FaBell size={18} className="cursor-pointer" />
+      {/* Actions */}
+      <div className="flex items-center gap-3">
+        <button className="flex items-center gap-2 px-3 py-1 rounded-md 
+          bg-white/40 border border-white/50 shadow-sm 
+          hover:translate-y-[-2px] hover:shadow-lg transition-all duration-200">
+          <FiSearch className="text-gray-700" />
+          <span className="text-sm font-medium text-gray-700">Search</span>
         </button>
 
-        {unreadCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
-            {unreadCount}
-          </span>
-        )}
-        <span className="text-sm hidden md:inline">Notifications</span>
+        <button className="flex items-center gap-2 px-3 py-1 rounded-md 
+          bg-white/40 border border-white/50 shadow-sm 
+          hover:translate-y-[-2px] hover:shadow-lg transition-all duration-200">
+          <FiBell className="text-gray-700" />
+          <span className="text-sm font-medium text-gray-700">Alerts</span>
+        </button>
+
+        <button className="flex items-center gap-2 px-3 py-1 rounded-md 
+          bg-white/40 border border-white/50 shadow-sm 
+          hover:translate-y-[-2px] hover:shadow-lg transition-all duration-200">
+          <FiUser className="text-gray-700" />
+          <span className="text-sm font-medium text-gray-700">Profile</span>
+        </button>
       </div>
-    </nav>
+    </header>
   );
-}
+};
+
+export default Header;
