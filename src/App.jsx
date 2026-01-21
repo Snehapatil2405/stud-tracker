@@ -1,5 +1,4 @@
-import { Routes, Route, Outlet, useLocation, Navigate } from "react-router-dom";
-
+import { Routes, Route, useLocation } from "react-router-dom";
 
 // --- STUDENT PAGES ---
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -13,13 +12,19 @@ import StudentNoticeBoard from "./pages/student/StudentNoticeBoard";
 import AcademicRecords from "./pages/student/AcademicRecords";
 import Resourcevolt from "./pages/student/ResourceVoult";
 
-// --- NEW TEACHER PAGES (Imports) ---
-// Note: Hya files 'src/teacher' folder madhe asavya lagtil
-import TeacherLayout from "./pages/teacher/TeacherLayout";
-import TeacherDashboard from "./teacher/TeacherDashboard";
+/// --- TEACHER COMPONENTS & LAYOUT ---
+import TeacherLayout from "./components/teacher/TeacherLayout";
+
+// --- TEACHER PAGES (Total 8 Pages) ---
+import TeacherDashboard from "./pages/teacher/TeacherDashboard";
+import AttendanceManager from "./pages/teacher/AttendanceManager";
+import ResourceVault from "./pages/teacher/ResourceVault";
+import ClassRoster from "./pages/teacher/ClassRoster";
+import Broadcast from "./pages/teacher/Broadcast";
 import StudentQueryHub from "./pages/teacher/StudentQueryHub";
-import AttendanceQR from "./pages/teacher/AttendanceQR";
 import AssignmentControl from "./pages/teacher/AssignmentControl";
+import Settings from "./pages/teacher/Settings";
+
 // --- ADMIN PAGES ---
 import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -55,13 +60,31 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/logout" element={<Logout />} />
 
-        {/* --- 🚀 NEW TEACHER PANEL ROUTES (High-End) --- */}
+        {/* --- 🚀 TEACHER PANEL ROUTES --- */}
         <Route path="/teacher-dashboard" element={<TeacherLayout />}>
+          {/* १. Dashboard (Overview) */}
           <Route index element={<TeacherDashboard />} />
+
+          {/* २. Attendance Management */}
+          <Route path="attendance" element={<AttendanceManager />} />
+
+          {/* ३. Resource Vault (Study Materials) */}
+          <Route path="resources" element={<ResourceVault />} />
+
+          {/* ४. Class Roster (Student List) */}
+          <Route path="roster" element={<ClassRoster />} />
+
+          {/* ५. Announcements (Broadcast) */}
+          <Route path="broadcast" element={<Broadcast />} />
+
+          {/* ६. Student Query Hub */}
           <Route path="query-hub" element={<StudentQueryHub />} />
-          <Route path="attendance" element={<AttendanceQR />} />
+
+          {/* ७. Assignment Control */}
           <Route path="assignments" element={<AssignmentControl />} />
-          {/* Nantar aslele pages apan ithe add karat jau */}
+
+          {/* ८. Teacher Settings */}
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* --- STUDENT DASHBOARD --- */}

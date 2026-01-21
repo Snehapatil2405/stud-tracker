@@ -4,12 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ImageIcon, Camera, Trophy, School } from 'lucide-react';
 
 const galleryData = [
-  { id: 1, category: 'Campus', title: 'Main Campus', size: 'md:col-span-2 md:row-span-2', img: 'https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1000&auto=format&fit=crop' },
+  { id: 1, category: 'Campus', title: 'Main Campus', size: 'md:col-span-2 md:row-span-2', img: '/clgimg.jpeg' },
   { id: 2, category: 'Events', title: 'Cultural Fest', size: 'md:col-span-1 md:row-span-1', img: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=1000&auto=format&fit=crop' },
   { id: 3, category: 'Sports', title: 'Annual Sports', size: 'md:col-span-1 md:row-span-1', img: 'https://images.unsplash.com/photo-1544654803-b69140b285a1?q=80&w=1000&auto=format&fit=crop' },
-  { id: 4, category: 'Campus', title: 'Tech Library', size: 'md:col-span-1 md:row-span-2', img: 'https://images.unsplash.com/photo-1541339907198-e08756dee9b8?q=80&w=1000&auto=format&fit=crop' },
+  { id: 4, category: 'Campus', title: 'Tech Library', size: 'md:col-span-1 md:row-span-2', img: '/techlib.jpeg' },
   { id: 5, category: 'Events', title: 'Seminar Hall', size: 'md:col-span-2 md:row-span-1', img: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1000&auto=format&fit=crop' },
   { id: 6, category: 'Sports', title: 'Basketball Court', size: 'md:col-span-1 md:row-span-1', img: 'https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=1000&auto=format&fit=crop' },
+  { id: 7, category: 'Campus', title: 'campus', size: 'md:col-span-1 md:row-span-2', img: '/clg4.jpeg' },
+  { id: 8, category: 'Campus', title: 'campus', size: 'md:col-span-1 md:row-span-2', img: '/clg3.jpeg' },
+  { id: 9, category: 'Campus', title: 'Indoor Stadium', size: 'md:col-span-1 md:row-span-2', img: '/clg6.jpeg' },
+  { id: 10, category: 'Campus', title: 'canteen', size: 'md:col-span-1 md:row-span-2', img: '/clg5.jpeg' },
+
+
 ];
 
 const categories = [
@@ -67,8 +73,8 @@ const Gallery = () => {
               key={cat.name}
               onClick={() => setFilter(cat.name)}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 ${filter === cat.name
-                  ? 'bg-blue-600 text-white shadow-xl shadow-blue-200 scale-105'
-                  : 'bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
+                ? 'bg-blue-600 text-white shadow-xl shadow-blue-200 scale-105'
+                : 'bg-white text-gray-600 hover:bg-blue-50 hover:text-blue-600 border border-gray-200'
                 }`}
             >
               {cat.icon}
